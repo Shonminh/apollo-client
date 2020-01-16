@@ -1,0 +1,6 @@
+{
+  "appId": "agollo_test",
+  "cluster": "default",
+  "namespaceName": "application",
+  "apolloAddr": "127.0.0.1:8000"
+}

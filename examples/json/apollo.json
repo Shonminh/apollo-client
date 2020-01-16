@@ -1,0 +1,6 @@
+{
+    "appId": "demo-apollo",
+    "cluster": "default",
+    "namespaceName": "application,test.json,mysql.json,redis.json",
+    "apolloAddr": "127.0.0.1:8000"
+}
