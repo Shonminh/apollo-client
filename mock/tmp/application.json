@@ -1,0 +1,10 @@
+{
+	"appId": "agollo_test",
+	"cluster": "default",
+	"namespaceName": "application",
+	"releaseKey": "",
+	"configurations": {
+		"a1": "11",
+		"a2": "22"
+	}
+}
