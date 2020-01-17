@@ -199,18 +199,3 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-=======================================================================
-apollo-client
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-====================================================================
-The Apache 2.0 License
-====================================================================
-For internal/apollo (Forked from https://github.com/zouyx/agollo)
-For agollo.go (Forked from https://github.com/zouyx/agollo)
-For change_event.go (Forked from https://github.com/zouyx/agollo)
-For file.go (Forked from https://github.com/zouyx/agollo)
-For repository.go (Forked from https://github.com/zouyx/agollo)
-For utils.go (Forked from https://github.com/zouyx/agollo)
