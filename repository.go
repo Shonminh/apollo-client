@@ -11,7 +11,7 @@ import (
 // exported constants
 const (
 	EMPTY = ""
-	SEP   = "@"
+	SEP   = "."
 )
 
 var (
@@ -20,6 +20,11 @@ var (
 
 func initCache(sz int) *freecache.Cache {
 	gConfigCache = freecache.NewCache(sz)
+	return gConfigCache
+}
+
+
+func GetApolloConfigCache() *freecache.Cache  {
 	return gConfigCache
 }
 
@@ -101,7 +106,7 @@ func getConfigChangeEvent(namespaceName string, configurations map[string]string
 
 	// remove del keys
 	for ck, v := range mp {
-		k := ck[strings.LastIndex(ck, SEP)+1:]
+		k := ck[strings.Index(ck, SEP)+1:]
 		changes = append(changes, newDeletedConfigChange(k, v))
 	}
 
