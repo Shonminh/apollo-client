@@ -1,6 +1,0 @@
-{
-    "appId": "demo-apollo",
-    "cluster": "default",
-    "namespaceName": "application,application1,application2",
-    "apolloAddr": "127.0.0.1:8000"
-}
