@@ -48,6 +48,12 @@ func GetConfigByKey(key string) (string, error) {
 	return string(value), nil
 }
 
+func Cleanup() {
+	cacheMutex.Lock()
+	gConfigCache.Clear()
+	cacheMutex.Unlock()
+}
+
 func updateCache(ac *apollo.Config, ns *namespace, event *ChangeEvent) {
 	if ac == nil || ns == nil {
 		// nothing changed
