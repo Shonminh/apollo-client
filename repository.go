@@ -6,21 +6,52 @@ import (
 	"github.com/coocood/freecache"
 	"github.com/pkg/errors"
 	"strings"
+	"sync"
 )
 
 // exported constants
 const (
 	EMPTY = ""
-	SEP   = "@"
+	SEP   = "."
 )
 
 var (
 	gConfigCache *freecache.Cache
+	cacheMutex   sync.Mutex
 )
 
 func initCache(sz int) *freecache.Cache {
 	gConfigCache = freecache.NewCache(sz)
 	return gConfigCache
+}
+
+func GetConfigCacheMap() map[string]string {
+	configMap := make(map[string]string)
+	cacheMutex.Lock()
+	it := gConfigCache.NewIterator()
+	for en := it.Next(); en != nil; en = it.Next() {
+		key := string(en.Key)
+		value := string(en.Value)
+		configMap[key] = value
+	}
+	cacheMutex.Unlock()
+	return configMap
+}
+
+func GetConfigByKey(key string) (string, error) {
+	cacheMutex.Lock()
+	value, err := gConfigCache.Get([]byte(key))
+	cacheMutex.Unlock()
+	if err != nil {
+		return EMPTY, errors.WithMessage(err, "get value")
+	}
+	return string(value), nil
+}
+
+func Cleanup() {
+	cacheMutex.Lock()
+	gConfigCache.Clear()
+	cacheMutex.Unlock()
 }
 
 func updateCache(ac *apollo.Config, ns *namespace, event *ChangeEvent) {
@@ -54,9 +85,13 @@ func doUpdateCache(event *ChangeEvent) error {
 	for _, c := range event.Changes {
 		ck = getCacheKey(ns, c.Key)
 		if c.ChangeType == MODIFIED || c.ChangeType == ADDED {
+			cacheMutex.Lock()
 			gConfigCache.Set([]byte(ck), []byte(c.NewValue), 0)
+			cacheMutex.Unlock()
 		} else if c.ChangeType == DELETED {
+			cacheMutex.Lock()
 			gConfigCache.Del([]byte(ck))
+			cacheMutex.Unlock()
 		} else {
 			err := errors.New("Wrong ChangeType")
 			logger.LogError("Wrong ChangeType %v", c.ChangeType)
@@ -67,6 +102,8 @@ func doUpdateCache(event *ChangeEvent) error {
 }
 
 func getConfigChangeEvent(namespaceName string, configurations map[string]string) []*ConfigChange {
+	cacheMutex.Lock()
+	defer cacheMutex.Unlock()
 	if (configurations == nil || len(configurations) == 0) && gConfigCache.EntryCount() == 0 {
 		return nil
 	}
@@ -101,7 +138,7 @@ func getConfigChangeEvent(namespaceName string, configurations map[string]string
 
 	// remove del keys
 	for ck, v := range mp {
-		k := ck[strings.LastIndex(ck, SEP)+1:]
+		k := ck[strings.Index(ck, SEP)+1:]
 		changes = append(changes, newDeletedConfigChange(k, v))
 	}
 

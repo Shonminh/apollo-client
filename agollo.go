@@ -270,7 +270,9 @@ func getConfigPath(namespaceName string) string {
 
 func (cr configReader) getValue(key string) (string, error) {
 	ck := getCacheKey(string(cr), key)
+	cacheMutex.Lock()
 	value, err := gConfigCache.Get([]byte(ck))
+	cacheMutex.Unlock()
 	if err != nil {
 		return EMPTY, errors.WithMessage(err, "getValue "+key)
 	}
@@ -336,7 +338,9 @@ func (cr configReader) GetBoolValue(key string) (bool, error) {
 
 func (cr configReader) GetBytesValue(key string) ([]byte, error) {
 	ck := getCacheKey(string(cr), key)
+	cacheMutex.Lock()
 	value, err := gConfigCache.Get([]byte(ck))
+	cacheMutex.Unlock()
 	if err != nil {
 		return nil, errors.WithMessage(err, "GetBytesValue")
 	}

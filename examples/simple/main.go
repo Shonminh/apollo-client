@@ -30,15 +30,12 @@ func (l golog) Fatalf(template string, args ...interface{}) {
 
 func main() {
 	fmt.Println("Initilize agollo")
-	defaultVals := map[string]interface{}{
-		"a": 111,
-		"b": "this is a default value",
-		"c": true,
-		"d": 11.22,
-	}
 
-	err := agollo.Init(agollo.WithConfFile("./apollo.json"),
-		agollo.WithDefaultVals(defaultVals, "application"),
+	err := agollo.Init(
+		agollo.WithApolloAddr("127.0.0.1:8000"),
+		agollo.WithNamespaceName("application,application1,application2"),
+		agollo.WithAppId("demo-apollo"),
+		agollo.WithCluster("default"),
 		agollo.WithLogFunc(logger.Debugf, logger.Infof, logger.Errorf),
 	)
 	if err != nil {
