@@ -25,10 +25,27 @@ func initCache(sz int) *freecache.Cache {
 	return gConfigCache
 }
 
-func GetApolloConfigCache() *freecache.Cache {
+func GetConfigCacheMap() map[string]string {
+	configMap := make(map[string]string)
 	cacheMutex.Lock()
-	defer cacheMutex.Unlock()
-	return gConfigCache
+	it := gConfigCache.NewIterator()
+	for en := it.Next(); en != nil; en = it.Next() {
+		key := string(en.Key)
+		value := string(en.Value)
+		configMap[key] = value
+	}
+	cacheMutex.Unlock()
+	return configMap
+}
+
+func GetConfigByKey(key string) (string, error) {
+	cacheMutex.Lock()
+	value, err := gConfigCache.Get([]byte(key))
+	cacheMutex.Unlock()
+	if err != nil {
+		return EMPTY, errors.WithMessage(err, "get value")
+	}
+	return string(value), nil
 }
 
 func updateCache(ac *apollo.Config, ns *namespace, event *ChangeEvent) {
