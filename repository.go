@@ -6,6 +6,7 @@ import (
 	"github.com/coocood/freecache"
 	"github.com/pkg/errors"
 	"strings"
+	"sync"
 )
 
 // exported constants
@@ -16,6 +17,7 @@ const (
 
 var (
 	gConfigCache *freecache.Cache
+	cacheMutex   sync.Mutex
 )
 
 func initCache(sz int) *freecache.Cache {
@@ -23,8 +25,9 @@ func initCache(sz int) *freecache.Cache {
 	return gConfigCache
 }
 
-
-func GetApolloConfigCache() *freecache.Cache  {
+func GetApolloConfigCache() *freecache.Cache {
+	cacheMutex.Lock()
+	defer cacheMutex.Unlock()
 	return gConfigCache
 }
 
@@ -59,9 +62,13 @@ func doUpdateCache(event *ChangeEvent) error {
 	for _, c := range event.Changes {
 		ck = getCacheKey(ns, c.Key)
 		if c.ChangeType == MODIFIED || c.ChangeType == ADDED {
+			cacheMutex.Lock()
 			gConfigCache.Set([]byte(ck), []byte(c.NewValue), 0)
+			cacheMutex.Unlock()
 		} else if c.ChangeType == DELETED {
+			cacheMutex.Lock()
 			gConfigCache.Del([]byte(ck))
+			cacheMutex.Unlock()
 		} else {
 			err := errors.New("Wrong ChangeType")
 			logger.LogError("Wrong ChangeType %v", c.ChangeType)
@@ -72,6 +79,8 @@ func doUpdateCache(event *ChangeEvent) error {
 }
 
 func getConfigChangeEvent(namespaceName string, configurations map[string]string) []*ConfigChange {
+	cacheMutex.Lock()
+	defer cacheMutex.Unlock()
 	if (configurations == nil || len(configurations) == 0) && gConfigCache.EntryCount() == 0 {
 		return nil
 	}

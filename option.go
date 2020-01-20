@@ -81,7 +81,7 @@ func newDefaultOption() *option {
 	}
 }
 
-//Option contains apply method to load options
+// Option contains apply method to load options
 type Option interface {
 	apply(*option)
 }
@@ -224,6 +224,7 @@ func WithLogFunc(logDebug, logInfo, logError logger.LogFunc) Option {
 		logger.LogError = logError
 	})
 }
+
 
 type funcOption struct {
 	f func(*option)
