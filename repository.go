@@ -152,7 +152,7 @@ func getCacheKey(namespaceName string, key string) string {
 }
 
 func getChangeEvent(ac *apollo.Config) *ChangeEvent {
-	// 由于目前只有一个写进程，这个函数调用是没问题的
+	// Currently, only one goroutine will write memory
 	cl := getConfigChangeEvent(ac.NamespaceName, ac.Configurations)
 
 	event := &ChangeEvent{

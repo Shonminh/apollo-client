@@ -36,7 +36,7 @@ func (s *Server) handleConfigs(c *gin.Context) {
 	fmt.Printf("namespaceName:%s\n", namespaceName)
 	fmt.Printf("req:%+v\n", req)
 
-	// 根据key长度，小于10则无变化
+	// if key's length is less than 10, then return not modified response
 	if len(req.ReleaseKey) < 10 {
 		c.JSON(http.StatusNotModified, nil)
 		return
