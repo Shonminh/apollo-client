@@ -1,4 +1,5 @@
-// package apollo 封装了从 apollo 拉取配置和更新推送 的操作, 提供了自动重试和配置中心容灾的能力
+// Forked from https://github.com/zouyx/agollo
+
 package apollo
 
 import (

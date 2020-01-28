@@ -10,25 +10,25 @@ import (
 )
 
 const (
-	// 默认agollo配置文件名
+	// default apollo config file
 	DEFAULT_CONFFILE = "app.properties"
-	// 默认备份文件目录
+	// default backup directory
 	DEFAULT_BACKUPDIR = "."
-	// 默认备份文件后缀
+	// default backup file suffix
 	DEFAULT_BACKUPSUFFIX = ".apollo.json"
-	// 默认缓存大小
+	// default cache size
 	DEFAULT_CONFIGCACHESIZE = 50 * 1024 * 1024
-	// 默认 namespace
+	// default namespace
 	DEFAULT_NAMESPACENAME = "application"
-	// 默认 cluster
+	// default cluster
 	DEFAULT_CLUSTER = "default"
 
-	// 默认 notify 超时时间, 参见 apollo notifications 接口
+	// default notify timeout, see apollo notifications
 	DEFAULT_NOTIFYTIMEOUT = 65 * time.Second
 
-	// 默认连接超时时间
+	// default connect timeout
 	DEFAULT_CONNECTTIMEOUT = 10 * time.Second
-	// 出错后重试的暂停时间
+	// default retry interval
 	DEFAULT_RETRYINTERVAL = 3 * time.Second
 )
 
@@ -86,14 +86,14 @@ type Option interface {
 	apply(*option)
 }
 
-// WithDefaultVals 传一个map, 用于指定配置项的默认值, 如
+// set key's default value
+// for example:
 //    WithDefaultVals(map[string]interface{}{
-//		"a": "11",
+//		"key1": "11",
 //	  }, "application")
-//    设定了 application 配置项 a 的默认值为 "11"
-//    当调用 GetStringValue("a") 时，如果 a 配置项不存在，返回 11
-//    注意: 默认值限定类型 GetIntValue("a") 不会默认返回 11，还是默认返回 0
-//    注意: 默认值必须是 int/string/bool/float64, 否则会崩溃
+//    when call GetStringValue("key1"), if config key1 not found, return 11
+//   NOTE: default value is bound to type, if call GetIntValue("key1") will return 0
+//  NOTE: default value's type is in int/string/bool/float64, will panic when use other types
 func WithDefaultVals(val map[string]interface{}, namespaceName string) Option {
 	return newFuncOption(func(o *option) {
 		var err error
@@ -108,14 +108,14 @@ func WithDefaultVals(val map[string]interface{}, namespaceName string) Option {
 	})
 }
 
-// 设置定时配置刷新间隔
+// set refresh interval
 func WithRefreshInterval(v time.Duration) Option {
 	return newFuncOption(func(o *option) {
 		o.refreshInterval = v
 	})
 }
 
-// 设置实时配置推断更新间隔
+// set long poll interval
 func WithLongPollInterval(v time.Duration) Option {
 	return newFuncOption(func(o *option) {
 		o.longPollInterval = v
@@ -134,14 +134,14 @@ func WithCluster(s string) Option {
 	})
 }
 
-// 设置要拉取的namespace, 可以传多个，逗号间隔
+// set namespace list, use , to separate each namespace
 func WithNamespaceName(s string) Option {
 	return newFuncOption(func(o *option) {
 		o.NamespaceName = s
 	})
 }
 
-// 设置apollo配置中心地址, 如:
+// set apollo address, for example:
 //    127.0.0.1:8888
 //    https://meta.apollo.com
 func WithApolloAddr(s string) Option {
@@ -150,21 +150,21 @@ func WithApolloAddr(s string) Option {
 	})
 }
 
-// 设置备份文件存放目录
+// set backup save directory
 func WithBackupDir(s string) Option {
 	return newFuncOption(func(o *option) {
 		o.BackupDir = s
 	})
 }
 
-// 设置备份文件后缀名
+// set backup file's suffix name
 func WithBackupSuffix(s string) Option {
 	return newFuncOption(func(o *option) {
 		o.BackupSuffix = s
 	})
 }
 
-// 设置agollo配置文件
+// set apollo config file
 func WithConfFile(s string) Option {
 	return newFuncOption(func(o *option) {
 		o.confFile = s
@@ -175,42 +175,42 @@ func WithConfFile(s string) Option {
 	})
 }
 
-// 设置缓存大小
+// set cache size
 func WithCacheSize(v int) Option {
 	return newFuncOption(func(o *option) {
 		o.ConfigCacheSize = v
 	})
 }
 
-// 设置client ip, apollo 会记录这个ip
+// set client ip
 func WithClientIp(v string) Option {
 	return newFuncOption(func(o *option) {
 		o.clientIp = v
 	})
 }
 
-// 设置 apollo notify 接口超时时间
+// set apollo notify timeout
 func WithNotifyTimeout(v time.Duration) Option {
 	return newFuncOption(func(o *option) {
 		o.notifyTimeout = v
 	})
 }
 
-// 设置 apollo configs 接口超时时间
+// set apollo config connect timeout
 func WithConnectTimeout(v time.Duration) Option {
 	return newFuncOption(func(o *option) {
 		o.connectTimeout = v
 	})
 }
 
-// 设置连接出错后重试的间隔时间
+// set retry interval
 func WithRetryInterval(v time.Duration) Option {
 	return newFuncOption(func(o *option) {
 		o.retryInterval = v
 	})
 }
 
-// Init 时, 从本地备份文件中加载初始配置(不连接apollo)
+// get config from backup file when call Init function
 func WithQuickInitWithBK() Option {
 	return newFuncOption(func(o *option) {
 		o.quickInitWithBK = true

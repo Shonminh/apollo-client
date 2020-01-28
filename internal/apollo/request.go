@@ -1,3 +1,5 @@
+// Forked from https://github.com/zouyx/agollo
+
 package apollo
 
 import (
@@ -16,9 +18,9 @@ type CallBack struct {
 }
 
 type reqConfig struct {
-	// 设置到http.client中timeout字段
+	// http.client timeout
 	Timeout time.Duration
-	// 连接接口的uri
+	// apollo config center uri
 	Uri string
 }
 
@@ -47,7 +49,7 @@ func requestRecovery(hostRs Resolver, rc *reqConfig, callBack *CallBack) (interf
 
 func request(requestUrl string, timeout time.Duration, callBack *CallBack) (interface{}, error) {
 	client := &http.Client{Timeout: ConnectTimeout}
-	// 如有设置自定义超时时间即使用
+	// if has custom timeout setting
 	if timeout != 0 {
 		client.Timeout = timeout
 	}

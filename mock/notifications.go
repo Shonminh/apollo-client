@@ -47,7 +47,7 @@ func (s *Server) handleNotifications(c *gin.Context) {
 	}
 
 	for _, notification := range notifications {
-		// 根据NotificationId的值区分，小于50则无变化
+		// if notificationId is lower than 50, then nothing change
 		if notification.NotificationId < 50 {
 			continue
 		}
