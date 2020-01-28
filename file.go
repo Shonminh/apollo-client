@@ -1,3 +1,5 @@
+// Forked from https://github.com/zouyx/agollo
+
 package agollo
 
 import (
