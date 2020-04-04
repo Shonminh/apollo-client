@@ -84,7 +84,7 @@ func Init(opts ...Option) (err error) {
 			err = errors.New("ApolloAddr not set")
 			return
 		}
-		initCache(gOption.ConfigCacheSize)
+		initCache(gOption.ConfigCacheSize, gOption.ignoreNameSpace)
 
 		apollo.NofityTimeout = gOption.notifyTimeout
 		apollo.ConnectTimeout = gOption.connectTimeout
