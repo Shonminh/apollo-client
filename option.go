@@ -59,6 +59,8 @@ type option struct {
 	retryInterval  time.Duration
 
 	quickInitWithBK bool
+
+	ignoreNameSpace bool
 }
 
 func newDefaultOption() *option {
@@ -225,6 +227,11 @@ func WithLogFunc(logDebug, logInfo, logError logger.LogFunc) Option {
 	})
 }
 
+func IgnoreNameSpace() Option {
+	return newFuncOption(func(o *option) {
+		o.ignoreNameSpace = true
+	})
+}
 
 type funcOption struct {
 	f func(*option)

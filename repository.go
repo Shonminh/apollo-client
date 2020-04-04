@@ -20,10 +20,12 @@ const (
 var (
 	gConfigCache *freecache.Cache
 	cacheMutex   sync.Mutex
+	gIgnoreNameSpace bool
 )
 
-func initCache(sz int) *freecache.Cache {
+func initCache(sz int, ignore bool) *freecache.Cache {
 	gConfigCache = freecache.NewCache(sz)
+	gIgnoreNameSpace = ignore
 	return gConfigCache
 }
 
@@ -148,6 +150,9 @@ func getConfigChangeEvent(namespaceName string, configurations map[string]string
 }
 
 func getCacheKey(namespaceName string, key string) string {
+	if gIgnoreNameSpace {
+		return key
+	}
 	return namespaceName + SEP + key
 }
 
