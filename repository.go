@@ -114,6 +114,9 @@ func getConfigChangeEvent(namespaceName string, configurations map[string]string
 
 	// get old keys
 	nnd := namespaceName + SEP
+	if gIgnoreNameSpace {
+		nnd = ""
+	}
 	mp := map[string]string{}
 	it := gConfigCache.NewIterator()
 	for en := it.Next(); en != nil; en = it.Next() {
