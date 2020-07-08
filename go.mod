@@ -5,6 +5,7 @@ require (
 	github.com/coocood/freecache v1.0.1
 	github.com/gin-gonic/gin v1.4.0
 	github.com/hashicorp/go-multierror v1.0.0
+	github.com/json-iterator/go v1.1.10
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0
 	go.uber.org/atomic v1.5.0 // indirect

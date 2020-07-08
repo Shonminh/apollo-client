@@ -18,3 +18,4 @@ log
 .vscode
 examples/go.sum
 go.sum
+.idea/

@@ -138,7 +138,7 @@ func getTestService(notificationId int64, releaseKey string) (*service, error) {
 		return nil, errors.WithMessage(err, "loadJsonConfig")
 	}
 
-	initCache(option.ConfigCacheSize)
+	initCache(option.ConfigCacheSize, false)
 	apollo.NofityTimeout = option.notifyTimeout
 	apollo.ConnectTimeout = option.connectTimeout
 	apollo.RetryInterval = option.retryInterval
