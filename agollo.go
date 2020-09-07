@@ -190,6 +190,10 @@ func (s *service) syncConfig(isInit bool, nm []*namespace) error {
 			}
 		}
 	}
+	// err only print log, dont return, cause maybe namespace success once in namespace list.
+	if retErr != nil {
+		logger.LogError(fmt.Sprintf("syncConfig failed %s", retErr.Error()))
+	}
 	return nil
 }
 
