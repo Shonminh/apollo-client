@@ -116,7 +116,7 @@ func Init(opts ...Option) (err error) {
 		} else {
 			err = s.LoadConfigFile(nil)
 			if err != nil {
-				err = errors.WithMessage(err, "syncConfig init")
+				err = errors.WithMessage(err, "LoadConfigFile init")
 				return
 			}
 		}
@@ -162,29 +162,20 @@ func (s *service) syncConfig(isInit bool, nm []*namespace) error {
 	if nm == nil {
 		nm = s.namespaceList
 	}
-	var event map[string]*ChangeEvent
-	event = make(map[string]*ChangeEvent)
+	var retErr *multierror.Error
+	var event = make(map[string]*ChangeEvent)
 	for _, v := range nm {
 		cfg, err := s.ConfigCenter.SyncConfig(v.NamespaceName, v.releaseKey, v.NotificationId)
-		if err != nil {
-			logger.LogError("sync config failed %v", err)
-			var retErr = apollo.NewMutliError()
-			retErr = multierror.Append(retErr, err)
+		if err != nil || (cfg == nil && isInit) {
+			logger.LogError(fmt.Sprintf("sync namespace [%s] config failed %v", v.NamespaceName, err))
+			retErr = multierror.Append(apollo.NewMutliError(), err)
 			if isInit {
 				path := getConfigPath(v.NamespaceName)
 				cfg, err = loadConfigFile(path)
 				if err != nil {
-					err = errors.WithMessage(err, "loadConfigFile "+v.NamespaceName)
-					return multierror.Append(retErr, err)
+					retErr = multierror.Append(retErr, errors.WithMessage(err, "loadConfigFile "+v.NamespaceName))
+					continue
 				}
-			}
-		}
-		if cfg == nil && isInit {
-			path := getConfigPath(v.NamespaceName)
-			cfg, err = loadConfigFile(path)
-			if err != nil {
-				err = errors.WithMessage(err, "loadConfigFile"+path)
-				return err
 			}
 		}
 		if cfg != nil {
@@ -198,6 +189,10 @@ func (s *service) syncConfig(isInit bool, nm []*namespace) error {
 				pushChange(v, e)
 			}
 		}
+	}
+	// err only print log, dont return, cause maybe namespace success once in namespace list.
+	if retErr != nil {
+		logger.LogError(fmt.Sprintf("syncConfig failed %s", retErr.Error()))
 	}
 	return nil
 }
