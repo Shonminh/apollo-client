@@ -94,6 +94,9 @@ func request(requestUrl string, timeout time.Duration, callBack *CallBack) (inte
 		case http.StatusGatewayTimeout:
 			logger.LogInfo("Gateway Timeout")
 			return nil, nil
+		case http.StatusNotFound:
+			logger.LogError("Not Found")
+			return nil, nil
 		default:
 			logger.LogError("Connect Apollo Server Fail,StatusCode: %v", res.StatusCode)
 			err = errors.WithMessage(ErrInvalidHttpStatus, "status "+strconv.Itoa(res.StatusCode))

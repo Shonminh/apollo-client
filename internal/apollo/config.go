@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	max_retries    = 5
+	max_retries    = 0
 	ConnectTimeout = 5 * time.Second
 	RetryInterval  = 5 * time.Second
 	NofityTimeout  = 65 * time.Second
