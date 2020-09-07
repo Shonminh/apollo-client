@@ -95,7 +95,7 @@ func request(requestUrl string, timeout time.Duration, callBack *CallBack) (inte
 			logger.LogInfo("Gateway Timeout")
 			return nil, nil
 		case http.StatusNotFound:
-			logger.LogError("Not Found")
+			logger.LogError("%s Not Found, resp: %+v", requestUrl, res)
 			return nil, nil
 		default:
 			logger.LogError("Connect Apollo Server Fail,StatusCode: %v", res.StatusCode)
