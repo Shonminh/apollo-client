@@ -116,7 +116,7 @@ func Init(opts ...Option) (err error) {
 		} else {
 			err = s.LoadConfigFile(nil)
 			if err != nil {
-				err = errors.WithMessage(err, "syncConfig init")
+				err = errors.WithMessage(err, "LoadConfigFile init")
 				return
 			}
 		}
